@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">NMedia</string>
+    <string name="massage">NMedia!</string>
+    <string name="description_post_author_avatar">Post description</string>
+    <string name="menu_remove">Remove</string>
+    <string name="menu_edit">Edit</string>
+    <string name="post_text">Enter text</string>
+    <string name="error_empty_content">Content can\'t be empty</string>
+    <string name="head_edit">Edit post</string>
+    <string name="description_post_like">description</string>
+    <string name="chooser_share_post">Share post</string>
+    <string name="add_post">Add post</string>
+    <string name="ok">Ok</string>
+    <string name="description_post_video">Post video</string>
+    <string name="GoogleApiUnavailable">NMedia won\'t run without Google Play services, which are not supported by your device.</string>
+    <string name="channel_remote_name" translatable="false">Server message</string>
+    <string name="channel_remote_description" translatable="false">Channel description</string>
+    <string name="notification_user_liked">%1$s liked post %2$s</string>
+    <string name="notification_new_post">%s posted a new post:</string>
+    <string name="notification_unknown_type">Unknown type of notification</string>
+    <string name="notification_unknown_type_content">To receive notifications of this type, you need to update the application</string>
+    <string name="retry_loading">retry</string>
+    <string name="error_loading">"Error loading. Try againe "</string>
+    <string name="empty_posts">there are no posts</string>
+</resources>
