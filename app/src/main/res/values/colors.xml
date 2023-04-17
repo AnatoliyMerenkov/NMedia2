@@ -8,5 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="gray">@android:color/darker_gray</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="red">#FF0000</color>
+    <color name="red">@android:color/holo_red_dark</color>
 </resources>
