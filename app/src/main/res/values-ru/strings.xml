@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">НМедиа</string>
-    <string name="massage">НМедиа!</string>
-    <string name="description_post_author_avatar">Описание поста</string>
-    <string name="menu_remove">Удалить</string>
-    <string name="menu_edit">Редактировать</string>
-    <string name="post_text">Введите текст</string>
-    <string name="description_post_like">Описание</string>
+    <string name="str_hello">НМедиа</string>
+    <string name="app_name" translatable="false">НМедиа</string>
+    <string name="remove_post">Удалить</string>
+    <string name="blank_content_error">Пустой ввод</string>
+    <string name="edit_post">Редактировать</string>
+    <string name="edit_info">Редактирование</string>
+    <string name="chooser_share_post">Поделиться</string>
+    <string name="error_empty_content">Пустой текст</string>
+    <string name="description_post_save">Сохранить</string>
+    <string name="add_post">Добавить пост</string>
+    <string name="description_post_close_edit">Отменить редактирование</string>
+    <string name="google_play_unavailable">Google Api Недоступен</string>
+    <string name="channel_remote_name">Уведомления с сервера</string>
+    <string name="channel_remote_description">Уведомления с удаленного сервера</string>
+    <string name="notification_user_liked">%1$s поставил лайк посту %2$s</string>
+    <string name="notification_user_post">%1$s опубликовал новый пост:</string>
+    <string name="notification_fail">Ошибка при получении данных</string>
+    <string name="notification_content_post">%1$s</string>
+    <string name="error_loading">Что-то пошло не так. Попробуйте позднее</string>
+    <string name="retry_loading">Повторить</string>
+    <string name="empty_posts">Постов нет.\nЕсли создадите новый пост, то он появится здесь</string>
 </resources>

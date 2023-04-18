@@ -4,19 +4,24 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import ru.netology.nmedia.R
+import ru.netology.nmedia.service.FCMService.Action.*
 import kotlin.random.Random
 
 class FCMService : FirebaseMessagingService() {
-    private val action = "action"
-    private val content = "content"
-    private val channelId = "remote"
-    private val gson = Gson()
+
+    companion object {
+        private const val DATA_ACTION_KEY = "action"
+        private const val DATA_CONTENT_KEY = "content"
+        private const val CHANNEL_ID = "remote"
+        private val gson by lazy { Gson() }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -24,7 +29,7 @@ class FCMService : FirebaseMessagingService() {
             val name = getString(R.string.channel_remote_name)
             val descriptionText = getString(R.string.channel_remote_description)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(channelId, name, importance).apply {
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -33,32 +38,47 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        message.data[action]?.let {
-            when (Action.values().find { it.name == action }) {
-                Action.LIKE -> handleLike(gson.fromJson(message.data[content], Like::class.java))
-                Action.NEW_POST -> handleNewPost(
+        message.data[DATA_ACTION_KEY]?.let {
+            when (it) {
+                LIKE.toString() -> handLike(
                     gson.fromJson(
-                        message.data[content],
+                        message.data[DATA_CONTENT_KEY],
+                        Like::class.java
+                    )
+                )
+                NEW_POST.toString() -> handNewPost(
+                    gson.fromJson(
+                        message.data[DATA_CONTENT_KEY],
                         NewPost::class.java
                     )
                 )
-                else -> handleNotification()
+                else -> handOther(
+                    gson.fromJson(
+                        message.data[DATA_CONTENT_KEY],
+                        Other::class.java
+                    )
+                )
             }
         }
     }
 
     override fun onNewToken(token: String) {
-        println(token)
+        Log.d("FCM token", "token: $token")
     }
 
-    private fun handleLike(content: Like) {
-        val notification = NotificationCompat.Builder(this, channelId)
+    enum class Action {
+        LIKE,
+        NEW_POST
+    }
+
+    private fun handLike(content: Like) {
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(
                 getString(
                     R.string.notification_user_liked,
                     content.userName,
-                    content.postAuthor
+                    content.postAuthor,
                 )
             )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -68,32 +88,58 @@ class FCMService : FirebaseMessagingService() {
             .notify(Random.nextInt(100_000), notification)
     }
 
-    private fun handleNewPost(content: NewPost) {
-        val notification = NotificationCompat.Builder(this, channelId)
+    private fun handNewPost(content: NewPost) {
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(
                 getString(
-                    R.string.notification_new_post,
-                    content.author
+                    R.string.notification_user_post,
+                    content.userName,
                 )
             )
-            .setContentText(content.content)
+            .setContentText(
+                getString(
+                    R.string.notification_content_post,
+                    content.content
+                )
+            )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(content.content))
             .build()
 
         NotificationManagerCompat.from(this)
             .notify(Random.nextInt(100_000), notification)
+
     }
 
-    private fun handleNotification() {
-        val notification = NotificationCompat.Builder(this, channelId)
+    private fun handOther(content: Other) {
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(getString(R.string.notification_unknown_type))
-            .setContentText(getString(R.string.notification_unknown_type_content))
+            .setContentTitle(
+                getString(
+                    R.string.notification_fail
+                )
+            )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
         NotificationManagerCompat.from(this)
             .notify(Random.nextInt(100_000), notification)
     }
+
+    data class Like(
+        val userId: Long,
+        val userName: String,
+        val postId: Long,
+        val postAuthor: String,
+    )
+
+    data class NewPost(
+        val userName: String,
+        val content: String
+    )
+
+    data class Other(
+        val content: String
+    )
 }

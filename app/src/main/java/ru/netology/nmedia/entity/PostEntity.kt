@@ -3,50 +3,53 @@ package ru.netology.nmedia.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.netology.nmedia.dto.Post
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Entity
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
-    val authorAvatar: String,
     val content: String,
-    val published: Long,
-    val video: String? = null,
-    val likedByMe: Boolean = false,
-    val sharedByMe: Boolean = false,
-    val likes: Int = 0,
-    val share: Int = 0,
-    val view: Int = 0,
+    val published: String,
+    val likedByMe: Boolean,
+    val views: Long,
+    val likes: Long,
+    val share: Long,
+    val video: String?
 ) {
-    fun toDto() = Post(
-        this.id,
-        this.author,
-        this.content,
-        this.authorAvatar,
-        this.likedByMe,
-        this.likes,
-        this.published,
-        this.video,
-        this.sharedByMe,
-        this.share,
-        this.view
-    )
 
     companion object {
-        fun fromDto(post: Post) = PostEntity(
-            post.id,
-            post.author,
-            post.authorAvatar,
-            post.content,
-            post.published,
-            post.video,
-            post.likedByMe,
-            post.sharedByMe,
-            post.likes,
-            post.share,
-            post.view
+        fun fromDto(dto: Post): PostEntity = with(dto) {
+            PostEntity(
+                id = id,
+                author = author,
+                content = content,
+                published = published,
+                likedByMe = likedByMe,
+                views = views,
+                likes = likes,
+                share = share,
+                video = video
+            )
+        }
+    }
+
+    fun toDto(): Post = with(this) {
+        Post(
+            id = id,
+            author = author,
+            content = content,
+            published = published,
+            likedByMe = likedByMe,
+            views = views,
+            likes = likes,
+            share = share,
+            video = video
         )
     }
 }
+
+private val formattedDate = SimpleDateFormat.getDateTimeInstance()!!
+    .format(Calendar.getInstance().time!!)!!
