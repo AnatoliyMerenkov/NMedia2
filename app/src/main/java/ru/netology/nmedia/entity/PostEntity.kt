@@ -3,21 +3,21 @@ package ru.netology.nmedia.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.netology.nmedia.dto.Post
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Entity
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
+    val authorAvatar: String,
     val content: String,
     val published: String,
     val likedByMe: Boolean,
     val views: Long,
     val likes: Long,
     val share: Long,
-    val video: String?
+    val video: String?,
+    val newPost: Boolean
 ) {
 
     companion object {
@@ -31,7 +31,9 @@ data class PostEntity(
                 views = views,
                 likes = likes,
                 share = share,
-                video = video
+                video = video,
+                newPost = newPost,
+                authorAvatar = authorAvatar
             )
         }
     }
@@ -46,10 +48,13 @@ data class PostEntity(
             views = views,
             likes = likes,
             share = share,
-            video = video
+            video = video,
+            newPost = newPost,
+            authorAvatar = authorAvatar
         )
     }
 }
 
-private val formattedDate = SimpleDateFormat.getDateTimeInstance()!!
-    .format(Calendar.getInstance().time!!)!!
+fun List<PostEntity>.toDto() = map { it.toDto() }
+
+fun List<Post>.toEntity() = map { PostEntity.fromDto(it) }
